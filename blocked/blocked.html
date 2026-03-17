@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FocusLock — Site Blocked</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=DM+Sans:wght@400;500;700&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="blocked.css" />
+</head>
+
+<body>
+    <div class="grain" aria-hidden="true"></div>
+
+    <div class="scene">
+        <!-- Lock illustration -->
+        <div class="lock-wrap">
+            <svg class="lock-svg" viewBox="0 0 80 80" fill="none" aria-hidden="true">
+                <rect x="16" y="36" width="48" height="36" rx="8" stroke="var(--warn)" stroke-width="2" />
+                <path d="M28 36V24a12 12 0 0 1 24 0v12" stroke="var(--warn)" stroke-width="2" stroke-linecap="round" />
+                <circle cx="40" cy="54" r="4" fill="var(--warn)" />
+                <line x1="40" y1="58" x2="40" y2="64" stroke="var(--warn)" stroke-width="2" stroke-linecap="round" />
+            </svg>
+        </div>
+
+        <!-- Text block -->
+        <div class="content">
+            <h1 class="heading">This page is locked</h1>
+            <p class="sub">
+                <strong id="site-name">This site</strong> is blocked until you earn more screen time by completing
+                assignments.
+            </p>
+
+            <!-- Time info -->
+            <div class="time-card" id="time-card">
+                <div class="time-row">
+                    <span class="time-label">Time remaining</span>
+                    <span class="time-val" id="time-remaining">–</span>
+                </div>
+                <div class="time-divider"></div>
+                <div class="time-row">
+                    <span class="time-label">Status</span>
+                    <span class="time-val time-val--red" id="block-status">Blocked</span>
+                </div>
+            </div>
+
+            <!-- CTA -->
+            <div class="cta-row">
+                <a href="https://classroom.google.com" target="_blank" class="cta-btn cta-btn--primary">
+                    Open Google Classroom
+                </a>
+                <button class="cta-btn cta-btn--ghost" id="back-btn">← Go back</button>
+            </div>
+
+            <p class="hint">Complete your work → Sync FocusLock → Earn screen time</p>
+        </div>
+    </div>
+
+    <script src="blocked.js"></script>
+</body>
+
+</html>

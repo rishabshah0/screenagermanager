@@ -1,0 +1,203 @@
+/* ─── FocusLock Blocked Page — Light Minimalist Theme ──────────────────── */
+
+:root {
+    --bg: #faf8f4;
+    --bg-card: #ffffff;
+    --surface: #f2efe9;
+    --border: #e5e0d8;
+    --warn: #c45c4a;
+    --warn-soft: rgba(196, 92, 74, 0.08);
+    --accent: #5b7a5e;
+    --text: #2c2c2c;
+    --muted: #8a8680;
+    --font-serif: 'Cormorant Garamond', Georgia, serif;
+    --font-sans: 'DM Sans', -apple-system, sans-serif;
+    --radius: 12px;
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    overflow: hidden;
+}
+
+/* ── Paper grain ───────────────────────────────────────────────────────────── */
+.grain {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.35;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    z-index: 100;
+}
+
+/* ── Scene ─────────────────────────────────────────────────────────────────── */
+.scene {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    gap: 36px;
+    padding: 48px 32px;
+}
+
+/* ── Lock ──────────────────────────────────────────────────────────────────── */
+.lock-wrap {
+    animation: lock-float 4s ease-in-out infinite;
+}
+
+.lock-svg {
+    width: 80px;
+    height: 80px;
+    opacity: 0.85;
+}
+
+@keyframes lock-float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-6px);
+    }
+}
+
+/* ── Content ───────────────────────────────────────────────────────────────── */
+.content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    text-align: center;
+    max-width: 420px;
+    position: relative;
+    z-index: 1;
+}
+
+.heading {
+    font-family: var(--font-serif);
+    font-size: 42px;
+    font-weight: 600;
+    letter-spacing: -1px;
+    color: var(--text);
+    line-height: 1.1;
+}
+
+.sub {
+    font-size: 15px;
+    color: var(--muted);
+    line-height: 1.6;
+    font-weight: 400;
+}
+
+.sub strong {
+    color: var(--warn);
+    font-weight: 600;
+}
+
+/* ── Time Card ─────────────────────────────────────────────────────────────── */
+.time-card {
+    width: 100%;
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+
+.time-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 22px;
+}
+
+.time-label {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+}
+
+.time-val {
+    font-family: var(--font-serif);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.time-val--red {
+    color: var(--warn);
+}
+
+.time-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 0 22px;
+}
+
+/* ── CTA Row ───────────────────────────────────────────────────────────────── */
+.cta-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.cta-btn {
+    padding: 12px 26px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    border: none;
+}
+
+.cta-btn--primary {
+    background: var(--accent);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(91, 122, 94, 0.2);
+}
+
+.cta-btn--primary:hover {
+    background: #4d6b50;
+    box-shadow: 0 4px 16px rgba(91, 122, 94, 0.3);
+}
+
+.cta-btn--ghost {
+    background: var(--bg-card);
+    color: var(--muted);
+    box-shadow: var(--shadow);
+}
+
+.cta-btn--ghost:hover {
+    color: var(--text);
+}
+
+/* ── Hint ──────────────────────────────────────────────────────────────────── */
+.hint {
+    font-size: 12px;
+    color: var(--muted);
+    opacity: 0.7;
+    font-style: italic;
+}

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FocusLock</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=DM+Sans:wght@400;500;700&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="popup.css" />
+</head>
+
+<body>
+    <div class="grain" aria-hidden="true"></div>
+    <div class="shell">
+
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <div class="logo-mark">
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <rect x="5" y="11" width="14" height="10" rx="2.5" stroke="currentColor" stroke-width="1.5" />
+                        <path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="currentColor" stroke-width="1.5"
+                            stroke-linecap="round" />
+                        <circle cx="12" cy="16" r="1.2" fill="currentColor" />
+                    </svg>
+                </div>
+                <span class="logo-text">FocusLock</span>
+            </div>
+            <a href="../settings/settings.html" target="_blank" class="settings-btn" id="settings-link"
+                title="Settings">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                    <circle cx="12" cy="12" r="3" />
+                    <path
+                        d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                </svg>
+            </a>
+        </header>
+
+        <!-- Status banner (shown when blocking is active) -->
+        <div class="status-banner" id="status-banner" hidden>
+            <span class="status-dot"></span>
+            <span id="status-text">Screen time blocked</span>
+        </div>
+
+        <!-- Timer ring -->
+        <div class="timer-section">
+            <div class="ring-container" id="ring-container">
+                <svg class="ring-svg" viewBox="0 0 200 200" aria-hidden="true">
+                    <circle class="ring-track" cx="100" cy="100" r="88" />
+                    <circle class="ring-progress" id="ring-progress" cx="100" cy="100" r="88" />
+                </svg>
+                <div class="ring-center">
+                    <div class="timer-label">remaining</div>
+                    <div class="timer-display" id="timer-display">--:--</div>
+                    <div class="timer-sub" id="timer-earned">of --:-- earned</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats row -->
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-value" id="stat-assignments-val">–</div>
+                <div class="stat-label">Graded</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="stat-avg-grade-val">–</div>
+                <div class="stat-label">Avg Grade</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value stat-value--warning" id="stat-missing-val">–</div>
+                <div class="stat-label">Missing</div>
+            </div>
+        </div>
+
+        <!-- Difficulty toggle -->
+        <div class="section-label">Difficulty</div>
+        <div class="difficulty-toggle" id="difficulty-toggle" role="group" aria-label="Difficulty mode">
+            <button class="diff-btn active" id="diff-standard" data-diff="STANDARD">Standard</button>
+            <button class="diff-btn" id="diff-hard" data-diff="HARD">Hard</button>
+        </div>
+
+        <!-- Error / info messages -->
+        <div class="message-bar" id="message-bar" hidden></div>
+
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+
+</html>
