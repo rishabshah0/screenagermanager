@@ -1,3 +1,6 @@
+import { clamp, meanBy, filter, isEmpty, round } from 'lodash-es';
+import { Duration } from 'luxon';
+import browser from 'webextension-polyfill';
 
 'use strict';
 
@@ -52,25 +55,23 @@ function renderStatic({ settings, assignments }) {
     diffHard.classList.toggle('active', currentDifficulty === 'HARD');
 
     const raw = assignments?.raw ?? [];
-    const graded = raw.filter(a => a.status === 'graded' || a.status === 'turned-in');
-    const missing = raw.filter(a => a.status === 'missing');
+    const graded = filter(raw, a => a.status === 'graded' || a.status === 'turned-in');
+    const missing = filter(raw, { status: 'missing' });
 
     statAssignments.textContent = graded.length || 'none';
     statMissing.textContent = missing.length || '0';
 
     document.querySelector('.shell').classList.remove('loading');
 
-    if (graded.length > 0) {
-        const grades = graded.map(a => {
-            const e = parseFloat(a.earnedPoints) || 0;
-            const t = parseFloat(a.totalPoints) || 0;
-            return t > 0 ? (e / t) * 100 : 0;
-        });
-        const avg = grades.reduce((s, g) => s + g, 0) / grades.length;
-        statAvgGrade.textContent = `${avg.toFixed(0)}%`;
-    } else {
-        statAvgGrade.textContent = '–';
-    }
+    const avg = meanBy(graded, a => {
+        const e = parseFloat(a.earnedPoints) || 0;
+        const t = parseFloat(a.totalPoints) || 0;
+        return t > 0 ? (e / t) * 100 : 0;
+    });
+
+    statAvgGrade.textContent = !isEmpty(graded) && !isNaN(avg)
+        ? `${round(avg)}%`
+        : '–';
 }
 
 function renderLoop() {
@@ -80,17 +81,15 @@ function renderLoop() {
     }
 
     const earned = latestTimer.earnedSeconds ?? 0;
-
-    let remaining = 0;
-    if (latestTimer.endTime) {
-        remaining = Math.max(0, Math.floor((latestTimer.endTime - Date.now()) / 1000));
-    }
+    const remaining = latestTimer.endTime
+        ? Math.max(0, Math.floor((latestTimer.endTime - Date.now()) / 1000))
+        : 0;
 
     timerDisplay.textContent = formatTime(remaining);
     timerEarned.textContent = `of ${formatTime(earned)} earned`;
 
     const fraction = earned > 0 ? remaining / earned : 0;
-    const offset = RING_CIRCUMFERENCE * (1 - Math.max(0, Math.min(1, fraction)));
+    const offset = RING_CIRCUMFERENCE * (1 - clamp(fraction, 0, 1));
     ringProgress.style.strokeDashoffset = offset;
     document.querySelector('.ring-svg').setAttribute('aria-valuenow', Math.round(fraction * 100));
 
@@ -103,9 +102,7 @@ function renderLoop() {
     timerDisplay.classList.toggle('accent', !isWarning && !isBlocked);
 
     statusBanner.hidden = !isBlocked;
-    if (isBlocked) {
-        statusText.textContent = 'Screen time blocked';
-    }
+    if (isBlocked) statusText.textContent = 'Screen time blocked';
 
     renderLoopId = requestAnimationFrame(renderLoop);
 }
@@ -127,23 +124,11 @@ async function setDifficulty(mode) {
     await loadDataFromBackground();
 }
 
-function sendMessage(payload) {
-    return new Promise((resolve, reject) => {
-        chrome.runtime.sendMessage(payload, (response) => {
-            if (chrome.runtime.lastError) {
-                reject(new Error(chrome.runtime.lastError.message));
-            } else {
-                resolve(response ?? {});
-            }
-        });
-    });
-}
+const sendMessage = (payload) => browser.runtime.sendMessage(payload);
 
-function formatTime(totalSeconds) {
+const formatTime = (totalSeconds) => {
     if (!Number.isFinite(totalSeconds) || totalSeconds < 0) return '00:00';
-    const m = Math.floor(totalSeconds / 60);
-    const s = totalSeconds % 60;
-    return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
-}
+    return Duration.fromMillis(totalSeconds * 1000).toFormat('mm:ss');
+};
 
 init();

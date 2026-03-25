@@ -1,5 +1,6 @@
-
 import { getSettings } from './state.js';
+import browser from 'webextension-polyfill';
+import { defaultTo, map, filter } from 'lodash-es';
 
 const RULE_ID_OFFSET = 1000;
 
@@ -17,7 +18,7 @@ export const DEFAULT_BLOCKED_SITES = [
 ];
 
 function buildBlockRule(domain, ruleId) {
-    const blockedPageUrl = chrome.runtime.getURL('blocked/blocked.html');
+    const blockedPageUrl = browser.runtime.getURL('blocked/blocked.html');
     return {
         id: ruleId,
         priority: 1,
@@ -36,15 +37,15 @@ function buildBlockRule(domain, ruleId) {
 
 export async function activateBlocking() {
     const settings = await getSettings();
-    const blockedSites = settings.blockedSites ?? DEFAULT_BLOCKED_SITES;
+    const blockedSites = defaultTo(settings.blockedSites, DEFAULT_BLOCKED_SITES);
 
     await deactivateBlocking();
 
-    const newRules = blockedSites.map((domain, idx) =>
+    const newRules = map(blockedSites, (domain, idx) =>
         buildBlockRule(domain, RULE_ID_OFFSET + idx)
     );
 
-    await chrome.declarativeNetRequest.updateDynamicRules({
+    await browser.declarativeNetRequest.updateDynamicRules({
         addRules: newRules,
         removeRuleIds: [],
     });
@@ -53,24 +54,23 @@ export async function activateBlocking() {
 }
 
 export async function deactivateBlocking() {
-    const existingRules = await chrome.declarativeNetRequest.getDynamicRules();
-    const screenagerRuleIds = existingRules
-        .filter((r) => r.id >= RULE_ID_OFFSET && r.id < RULE_ID_OFFSET + 1000)
-        .map((r) => r.id);
+    const existingRules = await browser.declarativeNetRequest.getDynamicRules();
+    const screenagerRuleIds = map(
+        filter(existingRules, (r) => r.id >= RULE_ID_OFFSET && r.id < RULE_ID_OFFSET + 1000),
+        'id'
+    );
 
-    if (screenagerRuleIds.length > 0) {
-        await chrome.declarativeNetRequest.updateDynamicRules({
-            addRules: [],
-            removeRuleIds: screenagerRuleIds,
-        });
-        console.log(`[Screenager Manager] Removed ${screenagerRuleIds.length} blocking rules.`);
-    }
+    await browser.declarativeNetRequest.updateDynamicRules({
+        addRules: [],
+        removeRuleIds: screenagerRuleIds,
+    });
+    console.log(`[Screenager Manager] Removed ${screenagerRuleIds.length} blocking rules.`);
 }
 
 export async function updateBlockList(newSiteList, isBlockingActive) {
     const settings = await getSettings();
     settings.blockedSites = newSiteList;
-    await chrome.storage.local.set({ settings });
+    await browser.storage.local.set({ settings });
 
     if (isBlockingActive) {
         await activateBlocking();

@@ -1,3 +1,6 @@
+import { Duration } from 'luxon';
+import browser from 'webextension-polyfill';
+
 'use strict';
 
 let latestEndTime = null;
@@ -40,29 +43,19 @@ let renderLoopId = null;
 })();
 
 function renderLoop() {
-    let remaining = 0;
-    if (latestEndTime) {
-        remaining = Math.max(0, Math.floor((latestEndTime - Date.now()) / 1000));
-    }
+    const remaining = latestEndTime
+        ? Math.max(0, Math.floor((latestEndTime - Date.now()) / 1000))
+        : 0;
 
     const el = document.getElementById('time-remaining');
-    if (el) el.textContent = remaining > 0 ? formatTime(remaining) : '00:00';
+    if (el) el.textContent = formatTime(remaining);
 
     renderLoopId = requestAnimationFrame(renderLoop);
 }
 
-function sendMessage(payload) {
-    return new Promise((resolve, reject) => {
-        chrome.runtime.sendMessage(payload, (response) => {
-            if (chrome.runtime.lastError) reject(new Error(chrome.runtime.lastError.message));
-            else resolve(response ?? {});
-        });
-    });
-}
+const sendMessage = (payload) => browser.runtime.sendMessage(payload);
 
-function formatTime(totalSeconds) {
+const formatTime = (totalSeconds) => {
     if (!Number.isFinite(totalSeconds) || totalSeconds < 0) return '00:00';
-    const m = Math.floor(totalSeconds / 60);
-    const s = totalSeconds % 60;
-    return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
-}
+    return Duration.fromMillis(totalSeconds * 1000).toFormat('mm:ss');
+};
