@@ -1,6 +1,3 @@
-/* ═══════════════════════════════════════════════════════════════════════════
-   FocusLock Blocked Page — Elevated Light Theme with Framer Animations
-   ═══════════════════════════════════════════════════════════════════════════ */
 
 :root {
     --bg: #f8f6f1;
@@ -43,7 +40,6 @@ body {
     scroll-behavior: smooth;
 }
 
-/* ── Atmospheric Orbs ──────────────────────────────────────────────────────── */
 .atmosphere {
     position: fixed;
     inset: 0;
@@ -133,18 +129,16 @@ body {
     }
 }
 
-/* ── Paper Grain ───────────────────────────────────────────────────────────── */
 .grain {
     position: fixed;
     inset: 0;
     pointer-events: none;
     opacity: 0.25;
     mix-blend-mode: multiply;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http:
     z-index: 101;
 }
 
-/* ── Scene ──────────────────────────────────────────────────────────────────── */
 .scene {
     min-height: 100vh;
     display: flex;
@@ -157,7 +151,6 @@ body {
     z-index: 1;
 }
 
-/* ── Lock icon ─────────────────────────────────────────────────────────────── */
 .lock-wrap {
     position: relative;
     animation: lock-drop 1s var(--spring-soft) both;
@@ -196,7 +189,6 @@ body {
     }
 }
 
-/* ── Content stagger ───────────────────────────────────────────────────────── */
 .content {
     display: flex;
     flex-direction: column;
@@ -242,7 +234,6 @@ body {
     }
 }
 
-/* ── Time Card ─────────────────────────────────────────────────────────────── */
 .time-card {
     width: 100%;
     background: var(--bg-card);
@@ -305,7 +296,6 @@ body {
     margin: 0 24px;
 }
 
-/* ── CTA Row ───────────────────────────────────────────────────────────────── */
 .cta-row {
     display: flex;
     gap: 12px;
@@ -361,7 +351,6 @@ body {
     transform: scale(0.97);
 }
 
-/* ── Hint ──────────────────────────────────────────────────────────────────── */
 .hint {
     font-size: 12px;
     color: var(--muted);

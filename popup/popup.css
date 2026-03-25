@@ -1,8 +1,4 @@
-/* ═══════════════════════════════════════════════════════════════════════════
-   FocusLock Popup — Elevated Light Theme with Framer Animations
-   ═══════════════════════════════════════════════════════════════════════════ */
 
-/* ── Design Tokens ─────────────────────────────────────────────────────────── */
 :root {
   --bg: #f8f6f1;
   --bg-card: rgba(255, 255, 255, 0.72);
@@ -27,13 +23,11 @@
   --glass: saturate(1.8) blur(16px);
   --ring-circ: 553.0;
 
-  /* Spring easing curves */
-  --spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    --spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
   --spring-soft: cubic-bezier(0.34, 1.56, 0.64, 1);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* ── Reset ──────────────────────────────────────────────────────────────────── */
 *,
 *::before,
 *::after {
@@ -58,7 +52,6 @@ button {
   background: none;
 }
 
-/* ── Body ───────────────────────────────────────────────────────────────────── */
 body {
   width: 360px;
   min-height: 520px;
@@ -72,7 +65,6 @@ body {
   position: relative;
 }
 
-/* ── Atmospheric Background ─────────────────────────────────────────────────── */
 .atmosphere {
   position: fixed;
   inset: 0;
@@ -156,18 +148,16 @@ body {
   }
 }
 
-/* ── Paper Grain ────────────────────────────────────────────────────────────── */
 .grain {
   position: fixed;
   inset: 0;
   pointer-events: none;
   opacity: 0.25;
   mix-blend-mode: multiply;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http:
   z-index: 101;
 }
 
-/* ── Main Shell ─────────────────────────────────────────────────────────────── */
 .shell {
   display: flex;
   flex-direction: column;
@@ -183,9 +173,6 @@ body {
   opacity: 0;
 }
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   FRAMER-STYLE STAGGERED SPRING ENTRANCE
-   ═══════════════════════════════════════════════════════════════════════════ */
 .header {
   animation: spring-in 0.7s var(--spring) 0ms both;
 }
@@ -230,7 +217,6 @@ body {
   }
 }
 
-/* Ring has its own bouncy scale-up */
 .ring-container {
   animation: ring-reveal 1s var(--spring-soft) 80ms both;
 }
@@ -247,7 +233,6 @@ body {
   }
 }
 
-/* ── Header ─────────────────────────────────────────────────────────────────── */
 .header {
   display: flex;
   align-items: center;
@@ -309,7 +294,6 @@ body {
   height: 17px;
 }
 
-/* ── Status Banner ──────────────────────────────────────────────────────────── */
 .status-banner {
   display: flex;
   align-items: center;
@@ -373,7 +357,6 @@ body {
   }
 }
 
-/* ── Timer Ring ─────────────────────────────────────────────────────────────── */
 .timer-section {
   display: flex;
   justify-content: center;
@@ -465,7 +448,6 @@ body {
   font-style: italic;
 }
 
-/* ── Stats Row ──────────────────────────────────────────────────────────────── */
 .stats-row {
   display: flex;
   gap: 10px;
@@ -515,7 +497,6 @@ body {
   font-weight: 600;
 }
 
-/* ── Section label ──────────────────────────────────────────────────────────── */
 .section-label {
   font-size: 9px;
   font-weight: 600;
@@ -525,7 +506,6 @@ body {
   margin-bottom: -10px;
 }
 
-/* ── Difficulty Toggle ──────────────────────────────────────────────────────── */
 .difficulty-toggle {
   display: flex;
   background: var(--bg-card);
@@ -563,7 +543,6 @@ body {
   transform: scale(0.95);
 }
 
-/* ── Message Bar ────────────────────────────────────────────────────────────── */
 .message-bar {
   padding: 11px 16px;
   border-radius: var(--radius);

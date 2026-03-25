@@ -1,9 +1,5 @@
-/**
- * FocusLock — Settings Page Script
- */
 'use strict';
 
-/** Default blocked sites — kept in sync with background/blocker.js */
 const DEFAULT_BLOCKED_SITES = [
     'youtube.com',
     'tiktok.com',
@@ -30,7 +26,6 @@ let currentSites = [...DEFAULT_BLOCKED_SITES];
 let currentDiff = 'STANDARD';
 let saveTimeout = null;
 
-// ── Init ───────────────────────────────────────────────────────────────────
 async function init() {
     await loadSettings();
 
@@ -46,7 +41,6 @@ async function init() {
     });
 }
 
-// ── Load ───────────────────────────────────────────────────────────────────
 async function loadSettings() {
     try {
         const resp = await sendMessage({ type: 'GET_STATE' });
@@ -65,14 +59,12 @@ async function loadSettings() {
     }
 }
 
-// ── Difficulty ─────────────────────────────────────────────────────────────
 function setDiff(mode) {
     currentDiff = mode;
     diffStandard.classList.toggle('active', mode === 'STANDARD');
     diffHard.classList.toggle('active', mode === 'HARD');
 }
 
-// ── Site List ──────────────────────────────────────────────────────────────
 function renderSiteList() {
     if (currentSites.length === 0) {
         siteList.innerHTML = `<li class="site-item site-item--empty"><span>No sites blocked</span></li>`;
@@ -88,14 +80,14 @@ function renderSiteList() {
 
 function flashInputDuplicate() {
     newSiteInput.classList.remove('duplicate-flash');
-    // Force reflow
+
     void newSiteInput.offsetWidth;
     newSiteInput.classList.add('duplicate-flash');
 }
 
 function addSite() {
     const raw = newSiteInput.value.trim().toLowerCase()
-        .replace(/^https?:\/\//, '')
+        .replace(/^https?:\/\
         .replace(/^www\./, '')
         .split('/')[0];
 
@@ -114,7 +106,6 @@ function addSite() {
     newSiteInput.value = '';
 }
 
-// ── Auto-save (debounced 500ms) ───────────────────────────────────────────
 function autoSave() {
     clearTimeout(saveTimeout);
     saveTimeout = setTimeout(persistSettings, 500);
@@ -135,7 +126,6 @@ async function persistSettings() {
     }
 }
 
-// ── Helpers ────────────────────────────────────────────────────────────────
 function sendMessage(payload) {
     return new Promise((resolve, reject) => {
         chrome.runtime.sendMessage(payload, (response) => {
@@ -147,11 +137,6 @@ function sendMessage(payload) {
 
 init();
 
-// ═══════════════════════════════════════════════════════════════════════════
-// LERP SMOOTH SCROLL ENGINE
-// Intercepts native scroll and interpolates position for a buttery feel.
-// Skips interception when the cursor is over a scrollable child container.
-// ═══════════════════════════════════════════════════════════════════════════
 (function initLerpScroll() {
     let currentScroll = window.scrollY;
     let targetScroll = window.scrollY;
@@ -159,11 +144,7 @@ init();
     const MULTIPLIER = 1.2;
     let ticking = false;
 
-    /**
-     * Check if an element (or any ancestor up to body) is a scrollable
-     * container that still has room to scroll in the given direction.
-     */
-    function isInsideScrollable(el, deltaY) {
+        function isInsideScrollable(el, deltaY) {
         while (el && el !== document.body) {
             if (el.scrollHeight > el.clientHeight) {
                 const style = getComputedStyle(el);
@@ -171,7 +152,7 @@ init();
                 if (overflow === 'auto' || overflow === 'scroll') {
                     const atTop = el.scrollTop <= 0 && deltaY < 0;
                     const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 1 && deltaY > 0;
-                    // If there is still room to scroll inside, let native handle it
+
                     if (!atTop && !atBottom) return true;
                 }
             }
@@ -181,7 +162,7 @@ init();
     }
 
     window.addEventListener('wheel', (e) => {
-        // If cursor is inside a scrollable child (like site-list), let it scroll natively
+
         if (isInsideScrollable(e.target, e.deltaY)) return;
 
         e.preventDefault();
@@ -219,7 +200,6 @@ init();
     });
 })();
 
-// ── Scroll-triggered reveal animations ────────────────────────────────
 const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
         if (entry.isIntersecting) {

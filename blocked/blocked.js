@@ -1,41 +1,32 @@
-/**
- * FocusLock — Blocked Page Script
- * Reads the blocked site from URL params and shows remaining timer from storage.
- */
 'use strict';
 
 let latestEndTime = null;
 let renderLoopId = null;
 
 (async function () {
-    // ── Read site from URL param (set by the DNR redirect rule) ──
+
     const params = new URLSearchParams(window.location.search);
     const site = params.get('site') || 'This site';
     const siteEl = document.getElementById('site-name');
     if (siteEl) siteEl.textContent = site;
 
-    // ── Load timer state from service worker ──
     try {
         const resp = await sendMessage({ type: 'GET_STATE' });
         latestEndTime = resp.timer?.endTime;
 
-        // Start live countdown loop
         renderLoopId = requestAnimationFrame(renderLoop);
 
-        // Cleanup loop on exit
         window.addEventListener('unload', () => cancelAnimationFrame(renderLoopId));
 
-        // Poll every 10s just in case time is added remotely
         setInterval(async () => {
             try {
                 const r = await sendMessage({ type: 'GET_STATE' });
                 latestEndTime = r.timer?.endTime;
 
-                // If time was re-earned, navigate away
                 if (latestEndTime && latestEndTime > Date.now()) {
                     history.length > 1 ? history.back() : window.close();
                 }
-            } catch { /* silent */ }
+            } catch {  }
         }, 10_000);
 
     } catch {
@@ -43,7 +34,6 @@ let renderLoopId = null;
         if (el) el.textContent = 'Unavailable';
     }
 
-    // ── Back button ──
     document.getElementById('back-btn')?.addEventListener('click', () => {
         history.length > 1 ? history.back() : window.close();
     });
@@ -58,7 +48,6 @@ function renderLoop() {
     const el = document.getElementById('time-remaining');
     if (el) el.textContent = remaining > 0 ? formatTime(remaining) : '00:00';
 
-    // Auto navigation is handled by the 10s polling interval above, this loop is just for UI
     renderLoopId = requestAnimationFrame(renderLoop);
 }
 

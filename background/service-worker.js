@@ -1,13 +1,3 @@
-/**
- * FocusLock — MV3 Service Worker
- *
- * Responsibilities:
- *  1. Uses chrome.alarms to schedule blocking exactly when `endTime` is reached
- *  2. Activates DNR rules via blocker.js when time is up
- *  3. Handles messages from popup (GET_STATE, SET_REMAINING, SETTINGS_UPDATED)
- *
- * @module background/service-worker
- */
 
 import { computeFromRaw } from '../engine/formula.js';
 import { activateBlocking, deactivateBlocking } from './blocker.js';
@@ -21,8 +11,6 @@ import {
 
 const ALARM_NAME = 'focuslock-block';
 
-// ─── Install / Startup ──────────────────────────────────────────────────────
-
 chrome.runtime.onInstalled.addListener(async () => {
     console.log('[FocusLock] Extension installed.');
     await seedDemoData();
@@ -35,10 +23,9 @@ chrome.runtime.onStartup.addListener(async () => {
     await checkState();
 });
 
-/** Seed demo data on first install so the popup has something to show. */
 async function seedDemoData() {
     const existing = await getAssignments();
-    if (existing.raw && existing.raw.length > 0) return; // Already has real data
+    if (existing.raw && existing.raw.length > 0) return;
 
     const demoAssignments = [
         { title: 'Chapter 12 Reading Questions', earnedPoints: '45', totalPoints: '50', status: 'graded', dueDate: todayMinus(1) },
@@ -68,7 +55,6 @@ function todayMinus(days) {
     return d.toISOString().split('T')[0];
 }
 
-/** Check current timer and apply blocking or schedule the alarm. */
 async function checkState() {
     const timer = await getTimer();
 
@@ -80,12 +66,10 @@ async function checkState() {
     } else {
         console.log(`[FocusLock] Timer active. Blocking suspended until ${new Date(timer.endTime).toLocaleTimeString()}`);
         await deactivateBlocking();
-        // Schedule alarm to fire when time runs out
+
         chrome.alarms.create(ALARM_NAME, { when: timer.endTime });
     }
 }
-
-// ─── Alarm Tick ─────────────────────────────────────────────────────────────
 
 chrome.alarms.onAlarm.addListener(async (alarm) => {
     if (alarm.name === ALARM_NAME) {
@@ -94,20 +78,17 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
     }
 });
 
-// ─── Message Handling ────────────────────────────────────────────────────────
-
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     handleMessage(message).then(sendResponse).catch((err) => {
         console.error('[FocusLock] Message handler error:', err);
         sendResponse({ error: err.message });
     });
-    return true; // Keep channel open for async response
+    return true;
 });
 
 async function handleMessage(message) {
     switch (message.type) {
 
-        // ── Popup requests current state ──
         case 'GET_STATE': {
             const [timer, settings, assignments] = await Promise.all([
                 getTimer(),
@@ -117,12 +98,10 @@ async function handleMessage(message) {
             return { timer, settings, assignments };
         }
 
-        // ── Popup saves updated settings ──
         case 'SETTINGS_UPDATED': {
             const { settings } = message;
             await chrome.storage.local.set({ settings });
 
-            // Recompute timer base on new settings so it reflects immediately
             const assignments = await getAssignments();
             if (assignments.raw && assignments.raw.length > 0) {
                 const earnedMinutes = computeFromRaw(
@@ -133,20 +112,17 @@ async function handleMessage(message) {
                 const earnedSeconds = Math.round(earnedMinutes * 60);
                 const timer = await getTimer();
 
-                // Since we don't have perfect tracking of time spent, we just restart the timer
-                // with the new earned time for simplicity in this demo build.
                 await saveTimer({
                     earnedSeconds,
                     endTime: Date.now() + (earnedSeconds * 1000)
                 });
                 await checkState();
             } else {
-                await deactivateBlocking(); // refresh block rules if they changed domains
+                await deactivateBlocking();
             }
             return { success: true };
         }
 
-        // ── Dev/debug: manually override remaining time ──
         case 'SET_REMAINING': {
             const { seconds } = message;
             const timer = await getTimer();
