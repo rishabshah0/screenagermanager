@@ -55,7 +55,7 @@ async function loadSettings() {
         currentSites = settings.blockedSites ?? [...DEFAULT_BLOCKED_SITES];
         renderSiteList();
     } catch (err) {
-        console.error('FocusLock Settings load error:', err);
+        console.error('Screenager Manager Settings load error:', err);
     }
 }
 
@@ -66,6 +66,7 @@ function setDiff(mode) {
 }
 
 function renderSiteList() {
+    siteList.innerHTML = '';
     if (currentSites.length === 0) {
         siteList.innerHTML = `<li class="site-item site-item--empty"><span>No sites blocked</span></li>`;
     } else {
@@ -87,7 +88,7 @@ function flashInputDuplicate() {
 
 function addSite() {
     const raw = newSiteInput.value.trim().toLowerCase()
-        .replace(/^https?:\/\
+        .replace(/^https?:\/\//, '')
         .replace(/^www\./, '')
         .split('/')[0];
 
@@ -120,9 +121,9 @@ async function persistSettings() {
 
     try {
         await sendMessage({ type: 'SETTINGS_UPDATED', settings });
-        console.log('[FocusLock] Settings auto-saved.');
+        console.log('[Screenager Manager] Settings auto-saved.');
     } catch (err) {
-        console.error('[FocusLock] Auto-save error:', err);
+        console.error('[Screenager Manager] Auto-save error:', err);
     }
 }
 

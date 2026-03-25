@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "FocusLock",
+  "name": "Screenager Manager",
   "version": "1.0.0",
-  "description": "Earn your screen time. FocusLock calculates daily free time from your Google Classroom grades and blocks distracting sites when time runs out.",
+  "description": "Earn your screen time. Screenager Manager calculates daily free time from your Google Classroom grades and blocks distracting sites when time runs out.",
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
@@ -10,7 +10,7 @@
   },
   "action": {
     "default_popup": "popup/popup.html",
-    "default_title": "FocusLock"
+    "default_title": "Screenager Manager"
   },
   "background": {
     "service_worker": "background/service-worker.js",

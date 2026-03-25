@@ -9,16 +9,16 @@ import {
     saveAssignments,
 } from './state.js';
 
-const ALARM_NAME = 'focuslock-block';
+const ALARM_NAME = 'screenager-block';
 
 chrome.runtime.onInstalled.addListener(async () => {
-    console.log('[FocusLock] Extension installed.');
+    console.log('[Screenager Manager] Extension installed.');
     await seedDemoData();
     await checkState();
 });
 
 chrome.runtime.onStartup.addListener(async () => {
-    console.log('[FocusLock] Browser started.');
+    console.log('[Screenager Manager] Browser started.');
     await seedDemoData();
     await checkState();
 });
@@ -46,7 +46,7 @@ async function seedDemoData() {
         earnedSeconds,
     });
 
-    console.log(`[FocusLock] Demo data seeded: ${earnedMinutes.toFixed(1)} min earned from ${demoAssignments.length} assignments.`);
+    console.log(`[Screenager Manager] Demo data seeded: ${earnedMinutes.toFixed(1)} min earned from ${demoAssignments.length} assignments.`);
 }
 
 function todayMinus(days) {
@@ -61,10 +61,10 @@ async function checkState() {
     await chrome.alarms.clear(ALARM_NAME);
 
     if (timer.endTime === null || timer.endTime <= Date.now()) {
-        console.log('[FocusLock] Timer expired. Activating block.');
+        console.log('[Screenager Manager] Timer expired. Activating block.');
         await activateBlocking();
     } else {
-        console.log(`[FocusLock] Timer active. Blocking suspended until ${new Date(timer.endTime).toLocaleTimeString()}`);
+        console.log(`[Screenager Manager] Timer active. Blocking suspended until ${new Date(timer.endTime).toLocaleTimeString()}`);
         await deactivateBlocking();
 
         chrome.alarms.create(ALARM_NAME, { when: timer.endTime });
@@ -73,14 +73,14 @@ async function checkState() {
 
 chrome.alarms.onAlarm.addListener(async (alarm) => {
     if (alarm.name === ALARM_NAME) {
-        console.log('[FocusLock] Alarm fired — time is up.');
+        console.log('[Screenager Manager] Alarm fired — time is up.');
         await checkState();
     }
 });
 
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     handleMessage(message).then(sendResponse).catch((err) => {
-        console.error('[FocusLock] Message handler error:', err);
+        console.error('[Screenager Manager] Message handler error:', err);
         sendResponse({ error: err.message });
     });
     return true;

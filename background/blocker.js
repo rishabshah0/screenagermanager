@@ -49,21 +49,21 @@ export async function activateBlocking() {
         removeRuleIds: [],
     });
 
-    console.log(`[FocusLock] Blocking activated for ${newRules.length} sites.`);
+    console.log(`[Screenager Manager] Blocking activated for ${newRules.length} sites.`);
 }
 
 export async function deactivateBlocking() {
     const existingRules = await chrome.declarativeNetRequest.getDynamicRules();
-    const focusLockRuleIds = existingRules
+    const screenagerRuleIds = existingRules
         .filter((r) => r.id >= RULE_ID_OFFSET && r.id < RULE_ID_OFFSET + 1000)
         .map((r) => r.id);
 
-    if (focusLockRuleIds.length > 0) {
+    if (screenagerRuleIds.length > 0) {
         await chrome.declarativeNetRequest.updateDynamicRules({
             addRules: [],
-            removeRuleIds: focusLockRuleIds,
+            removeRuleIds: screenagerRuleIds,
         });
-        console.log(`[FocusLock] Removed ${focusLockRuleIds.length} blocking rules.`);
+        console.log(`[Screenager Manager] Removed ${screenagerRuleIds.length} blocking rules.`);
     }
 }
 

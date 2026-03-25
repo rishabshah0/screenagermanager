@@ -58,7 +58,7 @@ function assertExact(label, actual, expected) {
     }
 }
 
-console.log('\n📐 FocusLock Formula Engine Tests\n');
+console.log('\n📐 Screenager Manager Formula Engine Tests\n');
 
 console.log('Test 1: Zero assignments');
 assertExact(
